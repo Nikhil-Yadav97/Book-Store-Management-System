@@ -1,0 +1,137 @@
+@import "tailwindcss";
+
+* {
+  font-family: 'Poppins', sans-serif;
+}
+
+.page {
+  position: relative;
+  min-height: 558px;
+  background-color: black;
+  overflow: hidden;
+  display: flex ;
+  justify-content: center;
+  
+
+}
+
+/* image layer with low opacity */
+.page::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url('/bg.jpg');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.41;
+  /* light image */
+  z-index: 1;
+}
+
+/* content stays clear */
+.page h1 {
+  position: relative;
+  z-index: 2;
+  color: white;
+  margin-top: 80px;
+}
+
+.book {
+  position: relative;
+  min-height: 411px;
+  overflow: hidden;
+}
+
+/* background image layer */
+.book::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url('/login.jpg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.9;
+  z-index: 1;
+}
+
+/* keep content above background */
+.book > * {
+  position: relative;
+  z-index: 2;
+}
+
+
+.nav {
+  display: flex;
+  gap: 20px;
+  padding: 15px;
+  background: rgba(5, 31, 37, 0.368);
+  box-shadow: 0 4px 30px rgb(85, 84, 84);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1.5px solid rgb(240, 236, 236);
+  border-radius: 2px;
+}
+
+
+.createpage {
+  display: flex;
+  gap: 20px;
+  padding: 15px;
+  border-radius: 10px;
+
+  background-color: white;
+  border:2px solid rgb(0, 183, 255);   /* image in public/ */
+ 
+
+  box-shadow: 0 4px 30px rgba(80, 171, 179, 0.463);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+
+
+.nav-link {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.nav-link.active {
+  color: #000000;
+  border-bottom: 2px solid #040404;
+}
+
+.owner-dashboard{
+  background-color: black;
+}
+
+.owner-dashboard {
+  position: relative;
+  background-color: black;
+  overflow: hidden;
+  display: flex ;
+  justify-content: center;
+}
+
+/* image layer with low opacity */
+.owner-dashboard::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url('/shop1.jpg');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.5;
+  /* light image */
+  z-index: 1;
+}
+
+.owner-dashboard h1 {
+  position: relative;
+  z-index: 2;
+  color: white;
+  margin-top: 80px;
+  
+}
