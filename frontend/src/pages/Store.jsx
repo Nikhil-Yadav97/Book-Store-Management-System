@@ -60,13 +60,13 @@ function Store() {
       <OwnerNavbar />
       <div className="p-4">
         <BackButton destination='/dashboard' />
-          {/* Show store header when owner has a store */}
-          {storeDetails && (
-            <div className="mb-4 text-center">
-              <h2 className="text-4xl font-semibold rounded-sm" style={{border:""}}>{storeDetails.name}</h2>
-              
-            </div>
-          )}
+        {/* Show store header when owner has a store */}
+        {storeDetails && (
+          <div className="mb-4 text-center">
+            <h2 className="text-4xl font-semibold rounded-sm" style={{ border: "" }}>{storeDetails.name}</h2>
+            <p style={{ marginTop: 6, color: '#111010ff' }}>Available balance: <strong>₹{Number(storeDetails.balance).toFixed(2)}</strong></p>
+          </div>
+        )}
         <div className="flex justify-center items-center gap-x-4">
           <h1 className="font-semibold text-2xl">Views</h1>
           <button
