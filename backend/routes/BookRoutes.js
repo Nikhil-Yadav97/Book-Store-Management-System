@@ -244,8 +244,14 @@ router.put("/:id", verifyToken, requireSeller, async (req, res) => {
     });
   } catch (error) {
     console.error(error);
+    return res.status(500).json({ message: error.message });
+  }
+});
+
 /* =========================
    UPDATE STOCK (ONLY OWNER)
+   POST /books/:id/stock
+   Adjusts store balance when copies change (selling or restocking)
    ========================= */
 router.put("/:id/stock", verifyToken, requireSeller, async (req, res) => {
   try {
@@ -266,14 +272,66 @@ router.put("/:id/stock", verifyToken, requireSeller, async (req, res) => {
       });
     }
 
-    book.copies = copies;
+    const oldCopies = Number(book.copies || 0);
+    const newCopies = Number(copies);
+    const price = Number(book.price || 0);
+
+    const { Store } = await import("../models/Store.js");
+    const store = await Store.findById(book.store);
+    if (!store) return res.status(404).json({ message: "Store not found" });
+
+    if (store.owner.toString() !== req.user.id) {
+      return res.status(403).json({ message: "Not your store" });
+    }
+
+    if (newCopies > oldCopies) {
+      // owner adds stock — withdraw store by price * addedCopies
+      const added = newCopies - oldCopies;
+      const withdraw = added * price;
+
+      if (store.balance < withdraw) {
+        return res.status(400).json({ message: "Insufficient store balance to add stock" });
+      }
+
+      store.balance -= withdraw;
+      await store.save();
+
+      const Transaction = (await import("../models/Transactions.js")).default;
+      await Transaction.create({
+        owner: req.user.id,
+        store: store._id,
+        type: "OWNER_WITHDRAW",
+        direction: "DEBIT",
+        amount: withdraw,
+        balanceAfter: store.balance,
+        reference: { note: "Stock addition" }
+      });
+    } else if (newCopies < oldCopies) {
+      // owner sold some copies — credit store by margin% * price * sold
+      const sold = oldCopies - newCopies;
+      const marginEarned = (store.marginPercent / 100) * price * sold;
+
+      store.balance += marginEarned;
+      await store.save();
+
+      const Transaction = (await import("../models/Transactions.js")).default;
+      await Transaction.create({
+        owner: req.user.id,
+        store: store._id,
+        type: "OWNER_EARNING",
+        direction: "CREDIT",
+        amount: marginEarned,
+        balanceAfter: store.balance,
+        reference: { note: "Sold stock" }
+      });
+    }
+
+    book.copies = newCopies;
     await book.save();
 
-    res.status(200).json({
-      message: "Stock updated successfully",
-      data: book,
-    });
+    res.status(200).json({ message: "Stock updated successfully", data: book, storeBalance: store.balance });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: error.message });
   }
 });
