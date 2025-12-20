@@ -22,8 +22,10 @@ function OwnerNavbar() {
                 <div className="flex gap-x-9">
                     <NavLink to="/dashboard" end className={navClass} style={{ marginTop: "5px" }}>Home</NavLink>
                     <NavLink to="/store" className={navClass} style={{ marginTop: "5px" }}>Store</NavLink>
-                    <NavLink to="/transactions/owner" className={navClass} style={{ marginTop: "5px" }}>Transactions</NavLink>
-                    
+                    <NavLink to={user?.store ? `/owner/stores/${user.store}/dashboard` : "#"} className={navClass} style={{ marginTop: "5px" }} {...(!user?.store && { onClick: (e) => e.preventDefault() })}>
+                        Transactions
+                    </NavLink>
+
                     <NavLink to="/" className={navClass} >
                         <button className='rounded-sm text-white p-2 bg-red-600 hover:bg-red-700 hover:text-black' onClick={logout} style={{ height: "40px", width: "80px" }}>
                             Logout

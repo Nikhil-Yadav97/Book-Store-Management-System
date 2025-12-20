@@ -14,11 +14,11 @@ import Register from "../auths/Register.jsx";
 import Ownersdashboard from "./pages/Dashboards/Ownersdashboard.jsx";
 import UserDashboard from "./pages/Dashboards/UserDashboard.jsx";
 import ProtectedRoute from "./components/ProtectedRoutes";
-import OwnerTransaction from "./pages/Dashboards/OwnerTransaction.jsx";
+import OwnerTransactionDashboard from "./pages/Dashboards/OwnerTransactionDashboard.jsx";
 function App() {
   const { user, loading } = useContext(UserContext);
 
-  // 🔑 BLOCK ROUTING UNTIL AUTH IS RESOLVED
+
   if (loading) {
     return <h1>Loading user...</h1>;
   }
@@ -35,7 +35,7 @@ function App() {
         element={!user ? <Register /> : <Navigate to="/dashboard" />}
       />
 
-      {/* PROTECTED ROUTES */}
+
       <Route
         path="/dashboard"
         element={
@@ -101,21 +101,25 @@ function App() {
         }
       />
       <Route
-      path="/transactions/owner"
-      element={
-        <ProtectedRoute>
-          <OwnerTransaction />
-        </ProtectedRoute>
-      }
-    />
-    
+        path="/owner/stores/:storeId/dashboard"
+        element={
+          <ProtectedRoute>
+            <OwnerTransactionDashboard />
+          </ProtectedRoute>
+        }
+      />
+
+
 
       {/* FALLBACK */}
       <Route
         path="*"
         element={<Navigate to={user ? "/dashboard" : "/login"} />}
       />
+
+
     </Routes>
+
   );
 }
 
