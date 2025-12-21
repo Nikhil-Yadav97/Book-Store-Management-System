@@ -13,7 +13,7 @@ function Register() {
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("User");
 
-  // 🔑 Store fields (ONLY for Owner)
+  //  Store fields (ONLY for Owner)
   const [storeName, setStoreName] = useState("");
   const [storeAddress, setStoreAddress] = useState("");
 
@@ -118,7 +118,7 @@ function Register() {
                 <option value="Owner">Owner</option>
               </select>
 
-              {/* 🔑 STORE FIELDS – ONLY FOR OWNER */}
+              {/*  STORE FIELDS – ONLY FOR OWNER */}
               {role === "Owner" && (
                 <>
                   <input

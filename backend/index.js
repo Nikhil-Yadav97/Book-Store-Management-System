@@ -15,7 +15,6 @@ const app = express();
 
 // Middleware
 app.use(express.json());
-
 app.use(cors(
     {
         origin: '*',
@@ -23,6 +22,7 @@ app.use(cors(
         allowedHeaders: 'Content-Type,Authorization'
     }
 ));
+
 
 // DB check
 app.get("/", (req, res) => {

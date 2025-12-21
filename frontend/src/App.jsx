@@ -8,6 +8,10 @@ import CreateBook from "./pages/CreateBook.jsx";
 import UpdateBook from "./pages/UpdateBook.jsx";
 import DeleteBook from "./pages/DeleteBook.jsx";
 import Store from "./pages/Store.jsx";
+import StoreDetails
+  from "./pages/Dashboards/StoreDetails.jsx";
+import UserHistory from "./pages/Dashboards/UserHistory.jsx";
+
 
 import Login from "../auths/Login.jsx";
 import Register from "../auths/Register.jsx";
@@ -15,6 +19,7 @@ import Ownersdashboard from "./pages/Dashboards/Ownersdashboard.jsx";
 import UserDashboard from "./pages/Dashboards/UserDashboard.jsx";
 import ProtectedRoute from "./components/ProtectedRoutes";
 import OwnerTransactionDashboard from "./pages/Dashboards/OwnerTransactionDashboard.jsx";
+import UserProfile from "./pages/Dashboards/UserProfile.jsx";
 function App() {
   const { user, loading } = useContext(UserContext);
 
@@ -25,14 +30,14 @@ function App() {
 
   return (
     <Routes>
-      {/* PUBLIC ROUTES */}
+
       <Route
         path="/login"
-        element={!user ? <Login /> : <Navigate to="/dashboard" />}
+        element={!user ? <Login /> : <Navigate to={user?.role === 'owner' ? "/dashboard" : "/user/home"} />}
       />
       <Route
         path="/register"
-        element={!user ? <Register /> : <Navigate to="/dashboard" />}
+        element={!user ? <Register /> : <Navigate to={user?.role === 'owner' ? "/dashboard" : "/user/home"} />}
       />
 
 
@@ -45,13 +50,10 @@ function App() {
         }
       />
 
+
       <Route
         path="/dashboard/user"
-        element={
-          <ProtectedRoute>
-            <UserDashboard />
-          </ProtectedRoute>
-        }
+        element={<Navigate to="/user/home" replace />}
       />
 
       <Route path="/" element={<Home />} />
@@ -108,13 +110,49 @@ function App() {
           </ProtectedRoute>
         }
       />
+      <Route
+        path="/user/profile"
+        element={
+          <ProtectedRoute>
+            <UserProfile />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/user/home"
+        element={
+          <ProtectedRoute>
+            <UserDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/user/stores"
+        element={
+          <ProtectedRoute>
+            <StoreDetails />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/user/history"
+        element={
+          <ProtectedRoute>
+            <UserHistory />
+          </ProtectedRoute>
+        }
+      />
 
 
 
-      {/* FALLBACK */}
+
+
+
+
+
       <Route
         path="*"
-        element={<Navigate to={user ? "/dashboard" : "/login"} />}
+        element={<Navigate to={user ? (user.role === 'owner' ? "/dashboard" : "/user/home") : "/login"} />}
       />
 
 

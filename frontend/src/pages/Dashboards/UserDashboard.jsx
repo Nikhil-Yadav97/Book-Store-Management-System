@@ -1,26 +1,25 @@
-import React from 'react'
-import { NavLink } from 'react-router-dom'
+import React, { useContext } from 'react'
 import '../../App.css'
-
-const navClass = ({ isActive }) =>
-  isActive ? 'nav-link active' : 'nav-link'
+import UserNavBar from './UserNavBar'
+import { UserContext } from '../../context/userContext'
 
 export default function UserDashboard() {
+  const { user } = useContext(UserContext);
+
   return (
-    <nav className="sticky top-0 z-50 flex justify-between items-center p-4
-                         nav border-b " >
-    
-          <NavLink to="/" className="text-2xl font-bold text-white">
-            Book Store
-          </NavLink>
-    
-          <div className="flex gap-x-9">
-            <NavLink to="/" end className={navClass}>Home</NavLink>
-            <NavLink to="/login" end className={navClass}>Login</NavLink>
-            <NavLink to="/register" end className={navClass}>Register</NavLink>
-            <NavLink to="/store" className={navClass}>Store</NavLink>
-            <NavLink to="/transactions/user" className={navClass}>Transactions</NavLink>
-          </div>
-        </nav>
+    <>
+      <UserNavBar />
+      <div className="page-wrapper">
+
+        <div className='userhome'>
+           <div className='flex flex-col justify-center content-center'>
+              <h1 className='border-2 border-white text-white font-bold text-8xl font-extrabold gradient-text'>
+                Welcome, {user?.name}
+              </h1>
+           </div>
+
+        </div>
+      </div>
+    </>
   )
 }

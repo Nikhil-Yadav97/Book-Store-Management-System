@@ -5,12 +5,12 @@ import { UserContext } from "../context/userContext.jsx";
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useContext(UserContext);
 
-  // 🔑 Wait until auth is resolved
+  //  Wait until auth is resolved
   if (loading) {
     return <h1>Loading user...</h1>;
   }
 
-  // 🔒 Block unauthenticated access
+  //  Block unauthenticated access
   if (!user) {
     return <Navigate to="/login" replace />;
   }

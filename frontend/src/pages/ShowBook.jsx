@@ -1,118 +1,145 @@
-import React, { useEffect } from 'react'
-import axios from 'axios'
-import BackButton from '../components/BackButton'
-import Spinner from '../components/Spinner'
-import { useParams } from 'react-router-dom'
-import "../App.css"
-import { useSnackbar } from 'notistack'
-import OwnerNavbar from './Dashboards/OwnerNavbar'
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import BackButton from "../components/BackButton";
+import Spinner from "../components/Spinner";
+import { useParams } from "react-router-dom";
+import "../App.css";
+import { useSnackbar } from "notistack";
+import OwnerNavbar from "./Dashboards/OwnerNavbar";
+
 export default function ShowBook() {
-  const [book, setBook] = React.useState({});
-  const [loading, setLoading] = React.useState(false);
+  const [book, setBook] = useState({});
+  const [loading, setLoading] = useState(false);
   const { id } = useParams();
   const { enqueueSnackbar } = useSnackbar();
 
   const token = localStorage.getItem("token");
 
   useEffect(() => {
-    setLoading(true);
-    axios.get(`http://localhost:5555/books/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          }})
-      .then((res) => {
+    const fetchBook = async () => {
+      try {
+        setLoading(true);
+        const res = await axios.get(
+          `http://localhost:5555/books/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         setBook(res.data);
-        setLoading(false);
-        enqueueSnackbar('Book details loaded successfully', { variant: 'success' });
-      }
-      )
-      .catch((err) => {
+        enqueueSnackbar("Book details loaded successfully", { variant: "success" });
+      } catch (err) {
         console.error(err);
+        enqueueSnackbar("Error while fetching book details", { variant: "error" });
+      } finally {
         setLoading(false);
-        enqueueSnackbar('Error while fetching book details', { variant: 'error' });
-      });
-  }, []);
+      }
+    };
+
+    fetchBook();
+  }, [id]);
+
   return (
     <>
       <OwnerNavbar />
-      <div className='p-4 '>
+      <div className="p-4">
         <BackButton />
-        <h1 className='text-3xl my-1 mb-3 text-center'>Book Details</h1>
-        {loading ? <Spinner /> : (
+        <h1 className="text-3xl my-4 text-center">Book Details</h1>
 
+        {loading ? (
+          <Spinner />
+        ) : (
+          <div className="max-w-4xl mx-auto  rounded-xl p-6 shadow-sm" style={{backgroundColor:"#87e7e739"}}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-black">
 
-          <div
-            className="flex flex-col   rounded-xl createpage p-4"
-            style={{ width: "400px" }}
-          >
-            <div className="my-1">
-              <span className="text-xl mr-4 text-black">Book Id:</span>
-              <span>{book._id}</span>
-            </div>
+              {/* Book ID */}
+              <div>
+                <span className="font-semibold">Book ID</span>
+                <p className="text-gray-900 break-all">{book._id}</p>
+              </div>
 
-            <div className="my-1">
-              <span className="text-xl mr-4 text-black">Title:</span>
-              <span>{book.title}</span>
-            </div>
+              {/* Title */}
+              <div>
+                <span className="font-semibold">Title</span>
+                <p className="text-gray-700">{book.title}</p>
+              </div>
 
-            <div className="my-1">
-              <span className="text-xl mr-4 text-black">Author:</span>
-              <span>{book.author}</span>
-            </div>
+              {/* Author */}
+              <div>
+                <span className="font-semibold">Author</span>
+                <p className="text-gray-700">{book.author}</p>
+              </div>
 
-            <div className="my-1">
-              <span className="text-xl mr-4 text-black">Publisher Year:</span>
-              <span>{book.publishYear}</span>
-            </div>
+              {/* Publish Year */}
+              <div>
+                <span className="font-semibold">Publish Year</span>
+                <p className="text-gray-700">{book.publishYear}</p>
+              </div>
 
-            <div className="my-1">
-              <span className="text-xl mr-4 text-black">Description:</span>
-              <span>{book.description}</span>
-            </div>
+              {/* Price */}
+              <div>
+                <span className="font-semibold">Price</span>
+                <p className="text-gray-700">₹{book.price}</p>
+              </div>
 
-            <div className="my-1">
-              <span className="text-xl mr-4 text-black">Genre:</span>
-              {book.genre?.length > 0
-                ? book.genre.map((g, index) => (
-                  <span
-                    key={index}
-                    className="inline-block bg-green-200 text-blue-800 text-sm px-2 py-1 rounded-full mr-2"
-                  >
-                    {g}
-                  </span>
-                ))
-                : <span>No genres available</span>}
-            </div>
+              {/* Copies */}
+              <div>
+                <span className="font-semibold">Copies</span>
+                <p className="text-gray-700">{book.copies}</p>
+              </div>
 
-            <div className="my-1">
-              <span className="text-xl mr-4 text-black">Price:</span>
-              <span>{book.price}</span>
-            </div>
+              {/* Description (FULL WIDTH) */}
+              <div className="md:col-span-2">
+                <span className="font-semibold">Description</span>
+                <p className="text-gray-700 mt-1">
+                  {book.description || "No description available"}
+                </p>
+              </div>
 
-            <div className="my-1">
-              <span className="text-xl mr-4 text-black">Copies:</span>
-              <span>{book.copies}</span>
-            </div>
+              {/* Genre (FULL WIDTH) */}
+              <div className="md:col-span-2">
+                <span className="font-semibold">Genres</span>
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {book.genre?.length > 0 ? (
+                    book.genre.map((g, index) => (
+                      <span
+                        key={index}
+                        className="bg-green-200 text-blue-800 text-sm px-3 py-1 rounded-full"
+                      >
+                        {g}
+                      </span>
+                    ))
+                  ) : (
+                    <span className="text-gray-500">No genres available</span>
+                  )}
+                </div>
+              </div>
 
-            <div className="my-1">
-              <span className="text-xl mr-4 text-black">Created At:</span>
-              <span>{new Date(book.createdAt).toLocaleString()}</span>
-            </div>
+              {/* Created At */}
+              <div>
+                <span className="font-semibold">Created At</span>
+                <p className="text-gray-700">
+                  {book.createdAt
+                    ? new Date(book.createdAt).toLocaleString()
+                    : "-"}
+                </p>
+              </div>
 
-            <div className="my-1">
-              <span className="text-xl mr-4 text-black">Updated At:</span>
-              <span>{new Date(book.updatedAt).toLocaleString()}</span>
+              {/* Updated At */}
+              <div>
+                <span className="font-semibold">Updated At</span>
+                <p className="text-gray-700">
+                  {book.updatedAt
+                    ? new Date(book.updatedAt).toLocaleString()
+                    : "-"}
+                </p>
+              </div>
+
             </div>
           </div>
-
-
-
-
-
-
         )}
-
       </div>
     </>
-  )
+  );
 }

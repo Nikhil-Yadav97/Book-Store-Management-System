@@ -146,7 +146,7 @@ router.post("/", verifyToken, requireSeller, async (req, res) => {
       description,
       genre,
       price,
-      owner: req.user.id,       //  FROM JWT
+      owner: req.user.id,       
       store: req.user.storeId,
     });
 

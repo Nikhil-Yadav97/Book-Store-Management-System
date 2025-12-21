@@ -2,7 +2,7 @@ import express from "express";
 import { User } from "../models/User.js";
 import Transaction from "../models/Transactions.js";
 import { verifyToken } from "../middleware/VerifyToken.js";
-
+import { Store } from "../models/Store.js";
 const router = express.Router();
 
 /* =====================================================
@@ -125,5 +125,40 @@ router.get(
     }
   }
 );
+// get all stores
+router.get("/getstores", async (req, res) => {
+  try {
+    // Return basic store info using actual schema fields
+    const stores = await Store.find({}, {
+      owner: 1,
+      name: 1,
+      location: 1,
+      createdAt: 1
+    }).sort({ createdAt: -1 }).populate('owner', 'name email');
 
+    return res.status(200).json({
+      count: stores.length,
+      stores
+    });
+  } catch (error) {
+    console.error("Get stores error:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+});
+
+
+
+router.get("/profile", verifyToken, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    return res.status(200).json({ user });
+  } catch (error) {
+    console.error("Get user profile error:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+});
 export default router;

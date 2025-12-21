@@ -11,10 +11,9 @@ import { UserProvider } from "./context/userContext";
 createRoot(document.getElementById('root')).render(
   <SnackbarProvider>
     <BrowserRouter>
-    <UserProvider>
-      <App />
+      <UserProvider>
+        <App />
       </UserProvider>
     </BrowserRouter>
-
   </SnackbarProvider>
 )

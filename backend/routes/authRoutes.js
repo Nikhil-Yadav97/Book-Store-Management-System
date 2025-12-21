@@ -17,26 +17,26 @@ router.post("/register", async (req, res) => {
     try {
         const { name, email, password, role, storeName, storeAddress } = req.body;
 
-        // 1️⃣ Basic validation
+        // Basic validation
         if (!name || !email || !password) {
             return res.status(400).json({ message: "Name, email and password required" });
         }
 
-        // 2️⃣ Owner must provide store details
+        //  Owner must provide store details
         if (role === "Owner" && (!storeName || !storeAddress)) {
             return res.status(400).json({ message: "Store name and address required for owner" });
         }
 
-        // 3️⃣ Check existing user
+        //  Check existing user
         const existingUser = await User.findOne({ email });
         if (existingUser) {
             return res.status(409).json({ message: "User already exists" });
         }
 
-        // 4️⃣ Hash password
+        // Hash password
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // 5️⃣ Create user
+        // Create user
         const user = await User.create({
             name,
             email,
@@ -46,12 +46,12 @@ router.post("/register", async (req, res) => {
 
         let store = null;
 
-        // 6️⃣ Create store ONLY if Owner
+        //  Create store ONLY if Owner
         if (role === "Owner") {
             store = await Store.create({
                 name: storeName,
                 location: storeAddress,
-                owner: user._id, // 🔑 one owner → one store
+                owner: user._id,
             });
 
             // link store to user
@@ -59,7 +59,7 @@ router.post("/register", async (req, res) => {
             await user.save();
         }
 
-        // 7️⃣ Generate JWT (include storeId, name, email)
+        // Generate JWT (include storeId, name, email)
         const token = jwt.sign(
             {
                 id: user._id,
@@ -67,12 +67,14 @@ router.post("/register", async (req, res) => {
                 name: user.name,
                 email: user.email,
                 storeId: store ? store._id : null,
+                balance: user.balance,
+                createdAt: user.createdAt,
             },
             process.env.JWT_SECRET,
             { expiresIn: "7d" }
         );
 
-        // 8️⃣ Response
+        //  Response
         res.status(201).json({
             message: "Registration successful",
             token,
@@ -82,6 +84,8 @@ router.post("/register", async (req, res) => {
                 email: user.email,
                 role: user.role,
                 store: store ? store._id : null,
+                balance: user.balance,
+                createdAt: user.createdAt,
             },
         });
     } catch (error) {
@@ -103,24 +107,24 @@ router.post("/login", async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        // 1️⃣ Validate
+        //  Validate
         if (!email || !password) {
             return res.status(400).json({ message: "Email and password required" });
         }
 
-        // 2️⃣ Find user + populate store
+        //  Find user + populate store
         const user = await User.findOne({ email }).populate("store");
         if (!user) {
             return res.status(401).json({ message: "Invalid credentials" });
         }
 
-        // 3️⃣ Compare password
+        //  Compare password
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             return res.status(401).json({ message: "Invalid credentials" });
         }
 
-        // 4️⃣ Generate token (include name and email)
+        //  Generate token (include name and email)
         const token = jwt.sign(
             {
                 id: user._id,
@@ -128,12 +132,14 @@ router.post("/login", async (req, res) => {
                 name: user.name,
                 email: user.email,
                 storeId: user.store ? user.store._id : null,
+                balance: user.balance,
+                createdAt: user.createdAt,
             },
             process.env.JWT_SECRET,
             { expiresIn: "7d" }
         );
 
-        // 5️⃣ Response
+        //  Response
         res.status(200).json({
             message: "Login successful",
             token,
@@ -143,6 +149,8 @@ router.post("/login", async (req, res) => {
                 email: user.email,
                 role: user.role,
                 store: user.store ? user.store._id : null,
+                balance: user.balance,
+                createdAt: user.createdAt,
             },
         });
     } catch (error) {

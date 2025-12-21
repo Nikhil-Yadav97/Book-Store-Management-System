@@ -3,6 +3,8 @@ import axiosInstance from "../../utlis/axiosinstance";
 import { useParams, useNavigate } from "react-router-dom";
 import { UserContext } from "../../context/userContext.jsx";
 import OwnerNavbar from "./OwnerNavbar";
+import { GrTransaction } from "react-icons/gr";
+import { TbMoneybag } from "react-icons/tb";
 
 export default function OwnerTransactionDashboard() {
     const { storeId } = useParams();
@@ -130,7 +132,9 @@ export default function OwnerTransactionDashboard() {
         <>
             <OwnerNavbar />
             <div style={{ maxWidth: "1000px", margin: "auto" }} className="">
-                <h2 className="text-center text-2xl font-semibold mt-10 underline"> Store Transaction Dashboard</h2>
+                
+                <h2 className="text-center text-2xl font-semibold mt-10 underline"> 
+                    Store Transaction Dashboard</h2>
 
                 {/* -------- BALANCE & ACTIONS -------- */}
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "16px" }}>
@@ -175,7 +179,9 @@ export default function OwnerTransactionDashboard() {
                 {success && <p style={{ color: "green" }}>{success}</p>}
 
                 {/* -------- TRANSACTIONS -------- */}
+                
                 <h3 className="font-semibold text-2xl mb-7">All Transactions</h3>
+                
 
                 {loading ? (
                     <p>Loading...</p>
@@ -208,7 +214,7 @@ export default function OwnerTransactionDashboard() {
                                             color: tx.direction === "CREDIT" ? "green" : "red"
                                         }}
                                     >
-                                        {tx.direction}
+                                        <GrTransaction />{tx.direction}
                                     </td>
 
                                     <td className="px-4 py-3">

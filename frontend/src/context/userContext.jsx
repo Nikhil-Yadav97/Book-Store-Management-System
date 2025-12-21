@@ -7,7 +7,6 @@ const decodeToken = (token) => {
   try {
     const payload = token.split(".")[1];
     if (!payload) return null;
-    // atob is available in browser environments
     const decoded = JSON.parse(atob(payload));
     return decoded;
   } catch (err) {
@@ -39,26 +38,54 @@ export const UserProvider = ({ children }) => {
       return;
     }
 
-    try {
-      const decoded = decodeToken(token);
-      if (!decoded) {
-        localStorage.removeItem("token");
-        setLoading(false);
-        return;
-      }
+    const fetchProfile = async () => {
+      try {
+        const decoded = decodeToken(token);
+        if (!decoded) {
+          localStorage.removeItem("token");
+          setLoading(false);
+          return;
+        }
 
-      setUser({
-        id: decoded.id || decoded._id,
-        name: decoded.name || decoded.username,
-        email: decoded.email,
-        role: decoded.role,
-        store: decoded.storeId || null,
-      });
-    } catch (err) {
-      localStorage.removeItem("token");
-    } finally {
-      setLoading(false);
-    }
+        // Start with token-decoded values (fast), then try to fetch canonical user profile
+        setUser({
+          id: decoded.id || decoded._id,
+          name: decoded.name,
+          email: decoded.email,
+          role: decoded.role,
+          store: decoded.storeId || null,
+          balance: decoded.balance ?? 0,
+          createdAt: decoded.createdAt || null,
+        });
+
+        // Fetch server profile to ensure we have fresh balance/createdAt
+        // Import axios lazily to avoid circular imports if any
+        const axios = (await import("../utlis/axiosinstance")).default;
+        const res = await axios.get("/users/profile");
+        if (res?.data?.user) {
+          const u = res.data.user;
+          setUser((prev) => ({
+            ...prev,
+            id: u._id,
+            name: u.name,
+            email: u.email,
+            role: u.role,
+            store: u.store || null,
+            balance: u.balance ?? 0,
+            createdAt: u.createdAt || null,
+          }));
+        }
+      } catch (err) {
+        console.error("Failed to fetch user profile:", err.message || err);
+        // If token invalid or server returns 401, clear token
+        localStorage.removeItem("token");
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfile();
   }, []);
 
   return (

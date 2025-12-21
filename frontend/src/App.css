@@ -61,6 +61,39 @@
   z-index: 2;
 }
 
+.userhome {
+  position: fixed;
+  inset: 0;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+          /* 🔑 REQUIRED */
+  display: flex;          /* 🔑 REQUIRED */
+  justify-content: center;
+  align-items: center;
+  opacity: 0.8;
+  background-color: black;
+}
+
+/* background image layer */
+.userhome::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("/userhome.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+              
+}
+
+/* content above background */
+.userhome > * {
+  position: relative;
+  z-index: 1;
+}
+
+
 
 .nav {
   display: flex;
@@ -134,4 +167,12 @@
   color: white;
   margin-top: 80px;
   
+}
+
+
+.gradient-text {
+  background: linear-gradient(90deg,rgb(240, 4, 4)0, #fb8d06, #ff0000);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }

@@ -45,9 +45,9 @@ function Login() {
       if (token) {
         localStorage.setItem("token", token)
         updateUser(user)
-        if(user.role==="Owner"){
+        if (user.role === "Owner") {
           navigate("/dashboard");
-        }else{
+        } else {
           navigate("/dashboard/user");
         }
         enqueueSnackbar('Login successful', { variant: 'success' });
@@ -108,7 +108,7 @@ function Login() {
             </p>
           </form>
         </div>
-        <div className=" rounded-sm  p-4" style={{  height: "" }} >
+        <div className=" rounded-sm  p-4" style={{ height: "" }} >
           <img
             src="/login.jpg"
             alt="Book"
