@@ -6,6 +6,9 @@ import { useParams } from "react-router-dom";
 import "../App.css";
 import { useSnackbar } from "notistack";
 import OwnerNavbar from "./Dashboards/OwnerNavbar";
+import UserNavBar from "./Dashboards/UserNavBar";
+import { useContext } from "react";
+import { UserContext } from "../context/userContext";
 
 export default function ShowBook() {
   const [book, setBook] = useState({});
@@ -40,17 +43,21 @@ export default function ShowBook() {
     fetchBook();
   }, [id]);
 
+  const { user } = useContext(UserContext);
+
+  const backDestination = user?.role === 'Owner' ? `/owner/stores/${user?.store}/dashboard` : `/user/store/${book.store}/books`;
+
   return (
     <>
-      <OwnerNavbar />
+      {user?.role === 'Owner' ? <OwnerNavbar /> : <UserNavBar />}
       <div className="p-4">
-        <BackButton />
+        <BackButton destination={backDestination} />
         <h1 className="text-3xl my-4 text-center">Book Details</h1>
 
         {loading ? (
           <Spinner />
         ) : (
-          <div className="max-w-4xl mx-auto  rounded-xl p-6 shadow-sm" style={{backgroundColor:"#87e7e739"}}>
+          <div className="max-w-4xl mx-auto  rounded-xl p-6 shadow-sm" style={{ backgroundColor: "#87e7e739" }}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-black">
 
               {/* Book ID */}

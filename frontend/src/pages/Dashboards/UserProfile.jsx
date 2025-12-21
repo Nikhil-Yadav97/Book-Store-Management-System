@@ -3,7 +3,7 @@ import { UserContext } from "../../context/userContext";
 import UserNavBar from "./UserNavBar";
 
 export default function Profile() {
-  const { user } = useContext(UserContext);
+  const { user,logout } = useContext(UserContext);
 
   return (
     <>
@@ -47,11 +47,26 @@ export default function Profile() {
 
         {/* Actions */}
         <div className="flex flex-wrap gap-4 mt-6">
-          <ActionButton label="My Orders" />
-          <ActionButton label="Transaction History" />
-          <ActionButton label="Edit Profile" />
-          <ActionButton label="Logout" danger />
-        </div>
+  <button className="px-4 py-2 bg-indigo-600 text-white rounded">
+    My Orders
+  </button>
+
+  <button className="px-4 py-2 bg-indigo-600 text-white rounded">
+    Transaction History
+  </button>
+
+  <button className="px-4 py-2 bg-indigo-600 text-white rounded">
+    Edit Profile
+  </button>
+
+  <button
+    onClick={logout}
+    className="px-4 py-2 bg-red-500 text-white rounded"
+  >
+    Logout
+  </button>
+</div>
+
 
       </div>
     </div>

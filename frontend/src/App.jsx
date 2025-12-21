@@ -20,6 +20,7 @@ import UserDashboard from "./pages/Dashboards/UserDashboard.jsx";
 import ProtectedRoute from "./components/ProtectedRoutes";
 import OwnerTransactionDashboard from "./pages/Dashboards/OwnerTransactionDashboard.jsx";
 import UserProfile from "./pages/Dashboards/UserProfile.jsx";
+import ShopBooks from "./pages/User/BooksOperations/ShopBooks.jsx";
 function App() {
   const { user, loading } = useContext(UserContext);
 
@@ -139,6 +140,14 @@ function App() {
         element={
           <ProtectedRoute>
             <UserHistory />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/user/store/:storeId/books"
+        element={
+          <ProtectedRoute>
+            <ShopBooks />
           </ProtectedRoute>
         }
       />

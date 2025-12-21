@@ -21,5 +21,16 @@ router.get("/me", verifyToken, async (req, res) => {
     }
 });
 
+// Get store by id (public)
+router.get("/:id", async (req, res) => {
+    try {
+        const store = await Store.findById(req.params.id).populate("owner", "name email");
+        if (!store) return res.status(404).json({ message: "Store not found" });
+        res.status(200).json(store);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
 
 export default router;
