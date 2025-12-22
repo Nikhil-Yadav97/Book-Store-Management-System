@@ -86,6 +86,17 @@ export const UserProvider = ({ children }) => {
     };
 
     fetchProfile();
+
+    // Listen for external balance updates (e.g., purchases)
+    const handler = (e) => {
+      const b = e?.detail?.balance;
+      if (typeof b !== 'undefined') {
+        setUser(prev => prev ? { ...prev, balance: b } : prev);
+      }
+    };
+    window.addEventListener('userBalanceUpdated', handler);
+
+    return () => window.removeEventListener('userBalanceUpdated', handler);
   }, []);
 
   return (

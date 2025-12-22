@@ -1,62 +1,82 @@
-import React from 'react'
-import { NavLink, useNavigate } from 'react-router-dom'
-import '../../App.css'
-import { useContext } from 'react'
-import { UserContext } from '../../context/userContext'
-import { FaStore } from "react-icons/fa";
+import React, { useContext } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import { UserContext } from "../../context/userContext";
+import { FaBook, FaHome } from "react-icons/fa";
 import { IoStorefrontSharp } from "react-icons/io5";
-import { FaHome } from "react-icons/fa";
 import { AiOutlineTransaction } from "react-icons/ai";
 import { TbLogout2 } from "react-icons/tb";
-import { FaBook } from "react-icons/fa6";
+
+/* Active link styling */
 const navClass = ({ isActive }) =>
-    isActive ? 'nav-link active' : 'nav-link'
+  `relative flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300
+   ${isActive
+     ? "bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-md scale-105"
+     : "text-gray-700 hover:bg-indigo-100 hover:text-indigo-700"
+   }`;
 
 function OwnerNavbar() {
-    const { user, logout } = useContext(UserContext);
-    const navigate = useNavigate();
-    const handleLogout = () => { logout(); navigate('/login'); };
-    return (
-        <div>
-            <nav className="sticky top-0 z-50 flex justify-between items-center p-4
-                         nav border-b " >
+  const { user, logout } = useContext(UserContext);
+  const navigate = useNavigate();
 
-                <NavLink to="/" className="text-2xl font-bold text-black flex flex-row gap-3">
-                    <FaBook className='mt-1 ' />
-                    Book Store
-                </NavLink>
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
 
+  return (
+    <nav className="sticky top-0 z-50 backdrop-blur-md bg-white/80 border-b border-gray-200 shadow-sm">
+      <div className="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
 
-                <div className="flex gap-x-9">
-                    <NavLink to="/dashboard" className={({ isActive }) =>
-                        `${navClass({ isActive })} flex items-center gap-2`
-                    } style={{ marginTop: "5px" }}><FaHome className='text-2xl' />Home</NavLink>
-                    <NavLink
-                        to="/store"
-                        className={({ isActive }) =>
-                            `${navClass({ isActive })} flex items-center gap-2`
-                        }
-                        style={{ marginTop: "5px" }}
-                    >
-                        <IoStorefrontSharp className="text-2xl" />
-                        <span>Store</span>
-                    </NavLink>
-                    <NavLink to={user?.store ? `/owner/stores/${user.store}/dashboard` : "#"} className={({ isActive }) =>
-                        `${navClass({ isActive })} flex items-center gap-2`
-                    } style={{ marginTop: "5px" }} {...(!user?.store && { onClick: (e) => e.preventDefault() })}>
-                        <AiOutlineTransaction className='text-2xl' /> Transactions
-                    </NavLink>
+        {/* Logo */}
+        <NavLink
+          to="/"
+          className="flex items-center gap-3 text-2xl font-bold tracking-wide text-indigo-600 hover:scale-105 transition-transform"
+        >
+          <FaBook />
+          Book Store
+        </NavLink>
 
-                    <button className='rounded-sm text-white p-2 bg-red-600 hover:bg-red-700 hover:text-black' onClick={handleLogout} style={{ height: "40px", width: "150px" }}>
-                        <div className='flex items-center gap-2 flex-row' >
-                            <TbLogout2 className='text-2xl' />
-                            Logout
-                        </div>
-                    </button>
-                </div>
-            </nav>
+        {/* Navigation */}
+        <div className="flex items-center gap-6">
+
+          <NavLink to="/dashboard" className={navClass}>
+            <FaHome className="text-xl" />
+            Home
+          </NavLink>
+
+          <NavLink to="/store" className={navClass}>
+            <IoStorefrontSharp className="text-xl" />
+            Store
+          </NavLink>
+
+          <NavLink
+            to={user?.store ? `/owner/stores/${user.store}/dashboard` : "#"}
+            className={navClass}
+            onClick={(e) => {
+              if (!user?.store) e.preventDefault();
+            }}
+          >
+            <AiOutlineTransaction className="text-xl" />
+            Transactions
+          </NavLink>
+
+          {/* Logout Button */}
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-2 px-5 py-2 rounded-lg
+                       bg-gradient-to-r from-red-500 to-red-600
+                       text-white font-medium shadow-md
+                       hover:from-red-600 hover:to-red-700
+                       hover:scale-105 transition-all duration-300"
+          >
+            <TbLogout2 className="text-xl" />
+            Logout
+          </button>
+
         </div>
-    )
+      </div>
+    </nav>
+  );
 }
 
-export default OwnerNavbar
+export default OwnerNavbar;

@@ -44,7 +44,7 @@ export default function OwnersDashboard() {
 
       <div
         className="owner-dashboard flex justify-center items-center flex-col"
-        style={{ height: "552px" }}
+        style={{ height: "600px" }}
       >
         {/* USER */}
         {loading ? (

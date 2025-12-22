@@ -16,44 +16,25 @@ export default function DeleteBook() {
   const [book, setBook] = useState(null);
   const [copiesToSell, setCopiesToSell] = useState("");
 
-  /* =========================
-     FETCH BOOK DETAILS
-     ========================= */
   useEffect(() => {
     const fetchBook = async () => {
       try {
         setLoading(true);
         const res = await axios.get(`http://localhost:5555/books/${id}`);
-        setBook(res.data); // 🔑 FIXED
+        setBook(res.data);
       } catch (err) {
-        enqueueSnackbar("Error while fetching book details", {
-          variant: "error",
-        });
+        enqueueSnackbar("Error fetching book", { variant: "error" });
       } finally {
         setLoading(false);
       }
     };
-
     fetchBook();
   }, [id, enqueueSnackbar]);
 
-  /* =========================
-     SELL / DELETE LOGIC
-     ========================= */
   const handleDeleteBook = async () => {
     const sellCount = Number(copiesToSell);
-
     if (!sellCount || sellCount <= 0) {
-      enqueueSnackbar("Enter a valid number of copies", {
-        variant: "warning",
-      });
-      return;
-    }
-
-    if (sellCount > book.copies) {
-      enqueueSnackbar("Cannot sell more copies than available", {
-        variant: "error",
-      });
+      enqueueSnackbar("Enter valid quantity", { variant: "warning" });
       return;
     }
 
@@ -62,93 +43,91 @@ export default function DeleteBook() {
 
     try {
       setLoading(true);
-
-      // 🔴 DELETE BOOK IF STOCK ZERO
       if (remainingCopies === 0) {
         await axios.delete(`http://localhost:5555/books/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         });
-
-        enqueueSnackbar("Book sold out and removed", {
-          variant: "success",
-        });
-      }
-     
-      else {
+        enqueueSnackbar("Stock cleared", { variant: "success" });
+      } else {
         await axios.put(
           `http://localhost:5555/books/${id}/stock`,
           { copies: remainingCopies },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
+          { headers: { Authorization: `Bearer ${token}` } }
         );
-
-        enqueueSnackbar(`${sellCount} copies sold successfully`, {
-          variant: "success",
-        });
+        enqueueSnackbar("Inventory updated", { variant: "success" });
       }
-
       navigate("/store");
     } catch (err) {
-      enqueueSnackbar(
-        err.response?.data?.message || "Operation failed",
-        { variant: "error" }
-      );
+      enqueueSnackbar("Operation failed", { variant: "error" });
     } finally {
       setLoading(false);
     }
   };
 
   if (loading) return <Spinner />;
-
   if (!book) return null;
 
   return (
-    <>
+    <div className="min-h-screen bg-gray-50/50">
       <OwnerNavbar />
-
-      <div className="p-4">
+      <div className="p-6">
         <BackButton destination="/store" />
 
-        <h1 className="text-3xl my-4 text-center">Stock Clearance</h1>
+        {/* Main Boundary Container */}
+        <div className="max-w-md mx-auto mt-12 bg-white border border-slate-300 shadow-[0_20px_50px_rgba(0,0,0,0.1)] rounded-2xl overflow-hidden">
+          
+          <div className="p-8">
+            {/* Header */}
+            <header className="mb-8 border-b border-slate-100 pb-6 text-center">
+              <h1 className="text-xs font-black tracking-widest text-slate-400 uppercase mb-2">
+                Inventory Action
+              </h1>
+              <h2 className="text-3xl font-extrabold text-slate-900 leading-tight">
+                {book.title}
+              </h2>
+              <p className="text-slate-700 font-medium mt-1">
+                by {book.author}
+              </p>
+            </header>
 
-        <div className="flex flex-col border-2 rounded-xl w-[500px] p-4 mx-auto">
-          <span className="text-center text-xl text-red-600">
-            Enter No Of Books To Sell
-          </span>
+            {/* Info Section */}
+            <div className="flex justify-between items-center bg-slate-50 p-4 rounded-xl mb-8 border border-slate-200">
+              <span className="text-slate-900 font-bold">Current Stock</span>
+              <span className="text-2xl font-black text-slate-900">{book.copies}</span>
+            </div>
 
-          <span className="mt-6 font-semibold">Book: {book.title}</span>
-          <span className="mt-2 font-semibold">Author: {book.author}</span>
+            {/* Form Section */}
+            <div className="space-y-6">
+              <div className="flex flex-col">
+                <label className="text-sm font-bold text-slate-900 mb-2 ml-1">
+                  Quantity to Sell
+                </label>
+                <input
+                  type="number"
+                  value={copiesToSell}
+                  onChange={(e) => setCopiesToSell(e.target.value)}
+                  placeholder="Enter amount"
+                  className="w-full text-lg font-bold p-4 border-2 border-slate-200 rounded-xl focus:border-slate-900 focus:ring-0 transition-all outline-none text-slate-900 placeholder:text-slate-300"
+                />
+              </div>
 
-          <label className="mt-4">
-            Available Copies: {book.copies}
-          </label>
+              <button
+                onClick={handleDeleteBook}
+                className="w-full bg-slate-900 text-white text-lg font-bold py-4 rounded-xl hover:bg-black transition-all shadow-lg active:translate-y-1"
+              >
+                Confirm Sale
+              </button>
 
-          <input
-            type="number"
-            min="1"
-            value={copiesToSell}
-            onChange={(e) => setCopiesToSell(e.target.value)}
-            className="mt-2 text-center rounded-sm"
-            style={{
-              backgroundColor: "#3282f14b",
-              height: "34px",
-              width: "90px",
-            }}
-          />
-
-          <button
-            className="p-2 bg-red-500 text-white mt-6 w-32 mx-auto rounded-sm hover:bg-red-600 transition"
-            onClick={handleDeleteBook}
-          >
-            Sell
-          </button>
+              <button
+                onClick={() => navigate("/store")}
+                className="w-full text-slate-500 font-bold text-sm hover:text-slate-900 transition-colors pt-2"
+              >
+                Cancel Transaction
+              </button>
+            </div>
+          </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

@@ -161,4 +161,32 @@ router.get("/profile", verifyToken, async (req, res) => {
     return res.status(500).json({ message: "Server error" });
   }
 });
+/* =====================================================
+   USER → VIEW OWNERS ORDERS
+   GET /users/me/orders
+===================================================== */
+router.get(
+  "/me/orders",
+  verifyToken,
+  async (req, res) => {
+    try {
+      const userId = req.user.id;
+      const { Order } = await import("../models/Order.js");
+
+      const orders = await Order.find({ user: userId })
+        .sort({ createdAt: -1 })
+        .populate('book', 'title author price')
+        .populate('store', 'name location');
+
+      return res.status(200).json({
+        totalOrders: orders.length,
+        orders
+      });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: "Server error" });
+    }
+  }
+);
+
 export default router;
