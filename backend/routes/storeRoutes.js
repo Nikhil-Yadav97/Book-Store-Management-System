@@ -3,6 +3,7 @@ import { Store } from "../models/Store.js";
 import { verifyToken } from "../middleware/VerifyToken.js";
 
 const router = express.Router();
+// get store by user store id from token
 router.get("/me", verifyToken, async (req, res) => {
     try {
         if (!req.user.storeId) {

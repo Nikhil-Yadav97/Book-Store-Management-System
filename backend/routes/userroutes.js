@@ -9,10 +9,7 @@ const router = express.Router();
    USER → DEPOSIT MONEY
    POST /users/me/deposit
 ===================================================== */
-router.post(
-  "/me/deposit",
-  verifyToken,
-  async (req, res) => {
+router.post("/me/deposit",verifyToken,async (req, res) => {
     try {
       const { amount } = req.body;
       const userId = req.user.id;
@@ -125,6 +122,7 @@ router.get(
     }
   }
 );
+
 // get all stores
 router.get("/getstores", async (req, res) => {
   try {
@@ -147,7 +145,7 @@ router.get("/getstores", async (req, res) => {
 });
 
 
-
+// getting user profile info 
 router.get("/profile", verifyToken, async (req, res) => {
   try {
     const userId = req.user.id;
@@ -161,6 +159,7 @@ router.get("/profile", verifyToken, async (req, res) => {
     return res.status(500).json({ message: "Server error" });
   }
 });
+
 /* =====================================================
    USER → VIEW OWNERS ORDERS
    GET /users/me/orders
@@ -173,6 +172,8 @@ router.get(
       const userId = req.user.id;
       const { Order } = await import("../models/Order.js");
 
+
+      // populate replace obj id with details of selected fields of the document of that object 
       const orders = await Order.find({ user: userId })
         .sort({ createdAt: -1 })
         .populate('book', 'title author price')

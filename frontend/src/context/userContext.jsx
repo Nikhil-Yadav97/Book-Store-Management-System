@@ -7,6 +7,8 @@ const decodeToken = (token) => {
   try {
     const payload = token.split(".")[1];
     if (!payload) return null;
+    // encode base 64 string to utf-8
+    // convt json to js object
     const decoded = JSON.parse(atob(payload));
     return decoded;
   } catch (err) {

@@ -8,8 +8,7 @@ import CreateBook from "./pages/CreateBook.jsx";
 import UpdateBook from "./pages/UpdateBook.jsx";
 import DeleteBook from "./pages/DeleteBook.jsx";
 import Store from "./pages/Store.jsx";
-import StoreDetails
-  from "./pages/Dashboards/StoreDetails.jsx";
+import StoreDetails from "./pages/Dashboards/StoreDetails.jsx";
 import UserHistory from "./pages/Dashboards/UserHistory.jsx";
 
 
@@ -151,22 +150,11 @@ function App() {
           </ProtectedRoute>
         }
       />
-
-
-
-
-
-
-
-
       <Route
         path="*"
         element={<Navigate to={user ? (user.role === 'owner' ? "/dashboard" : "/user/home") : "/login"} />}
       />
-
-
     </Routes>
-
   );
 }
 

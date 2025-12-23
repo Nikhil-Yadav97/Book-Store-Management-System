@@ -25,6 +25,7 @@ function Login() {
 
     try {
       setIsSubmitting(true);
+      // sent email and pass in req.body
       const response = await axiosInstance.post(API_PATHS.AUTH.LOGIN, { email, password });
       const { token, user } = response.data;
 

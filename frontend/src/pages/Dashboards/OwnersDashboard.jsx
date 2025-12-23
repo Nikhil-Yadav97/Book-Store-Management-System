@@ -11,7 +11,7 @@ export default function OwnersDashboard() {
   const [storeLoading, setStoreLoading] = useState(true);
 
   useEffect(() => {
-    // ⛔ wait until auth is resolved
+    //  wait until auth is resolved
     if (loading) return;
 
     const fetchStore = async () => {

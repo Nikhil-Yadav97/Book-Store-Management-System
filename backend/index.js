@@ -40,7 +40,7 @@ mongoose
     .connect(mongoDBURL)
     .then(() => {
         console.log("Connected to MongoDB Atlas");
-
+        // binds server to network port for listening http requests
         app.listen(PORT, () => {
             console.log(`Server running on port ${PORT}`);
         });
