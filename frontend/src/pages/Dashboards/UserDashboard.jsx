@@ -40,14 +40,14 @@ export default function UserDashboard() {
             icon={<TbBook className="text-4xl" />}
             title="Browse Books"
             desc="Explore the latest collection in the store."
-            link="/user/books"
+            link="/user/stores"
             color="bg-white"
           />
           <DashboardCard 
             icon={<TbHistory className="text-4xl" />}
             title="My Orders"
             desc="Check your previous purchases and status."
-            link="/user/orders"
+            link="/user/history"
             color="bg-white"
           />
           <DashboardCard 

@@ -12,9 +12,10 @@ import StoreDetails from "./pages/Dashboards/StoreDetails.jsx";
 import UserHistory from "./pages/Dashboards/UserHistory.jsx";
 
 
+import OwnerNavbar from "./pages/Dashboards/OwnerNavbar.jsx";
 import Login from "../auths/Login.jsx";
+import Ownersdashboard from "./pages/Dashboards/OwnersDashboard.jsx";
 import Register from "../auths/Register.jsx";
-import Ownersdashboard from "./pages/Dashboards/Ownersdashboard.jsx";
 import UserDashboard from "./pages/Dashboards/UserDashboard.jsx";
 import ProtectedRoute from "./components/ProtectedRoutes";
 import OwnerTransactionDashboard from "./pages/Dashboards/OwnerTransactionDashboard.jsx";

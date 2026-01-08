@@ -6,16 +6,19 @@ import { IoAddSharp } from "react-icons/io5";
 import { FaCartShopping } from "react-icons/fa6";
 import { LuMinus, LuMapPin, LuBookOpen, LuWallet } from "react-icons/lu";
 import { UserContext } from '../../../context/userContext.jsx';
-
+import { useSnackbar } from 'notistack';
 function ShopBooks() {
     const { user } = useContext(UserContext);
     const { storeId } = useParams();
     const navigate = useNavigate();
 
+    const { enqueueSnackbar } = useSnackbar();
+
     const [books, setBooks] = useState([]);
     const [store, setStore] = useState(null);
     const [quantities, setQuantities] = useState({});
     const [loading, setLoading] = useState(true);
+
 
     useEffect(() => {
         const load = async () => {
@@ -42,7 +45,7 @@ function ShopBooks() {
             }
         };
         if (storeId) load();
-    }, [storeId]);
+    }, []);
 
     const handleQty = (e, bookId, delta, max) => {
         e.stopPropagation();
@@ -63,10 +66,12 @@ function ShopBooks() {
                 if (tx && typeof tx.balanceAfter !== 'undefined') {
                     window.dispatchEvent(new CustomEvent('userBalanceUpdated', { detail: { balance: tx.balanceAfter } }));
                 }
-                alert('Purchase successful!');
+                enqueueSnackbar("Purchase Successfull", { variant: "success" });
+
             }
         } catch (error) {
-            alert(error?.response?.data?.message || 'Purchase failed');
+
+            enqueueSnackbar(error?.response?.data?.message || 'Purchase failed', { variant: "error" });
         }
     };
 
@@ -144,7 +149,7 @@ function ShopBooks() {
                                 </div>
 
                                 {/* Modern Control Panel */}
-                                <div 
+                                <div
                                     className="bg-slate-50 p-4 rounded-xl flex items-center justify-between gap-4"
                                     onClick={(e) => e.stopPropagation()}
                                 >

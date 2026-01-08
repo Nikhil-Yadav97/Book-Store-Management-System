@@ -2,15 +2,21 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import NavBar from '../components/NavBar'
 import { LuBookOpen, LuShieldCheck, LuZap, LuArrowRight } from "react-icons/lu"
+// ✅ CORRECT
+import { 
+  LuLibrary, 
+  LuShoppingCart, 
+  LuUsers 
+} from "react-icons/lu";
 
 function Home() {
     return (
         <div className="min-h-screen bg-[#0f172a] text-white selection:bg-indigo-500/30">
             <NavBar />
 
-            {/* Hero Section */}
+            
             <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
-                {/* Decorative Background Glows */}
+                
                 <div className="absolute top-0 -left-4 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
                 <div className="absolute top-0 -right-4 w-72 h-72 bg-indigo-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
 
@@ -45,45 +51,47 @@ function Home() {
 
             {/* Feature Highlights */}
             <section className="max-w-7xl mx-auto px-6 py-20 border-t border-slate-800">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-                    <div className="space-y-4">
-                        <div className="w-12 h-12 bg-indigo-500/10 rounded-xl flex items-center justify-center text-indigo-500">
-                            <LuZap size={24} />
-                        </div>
-                        <h3 className="text-xl font-bold">Instant Delivery</h3>
-                        <p className="text-slate-400 leading-relaxed">
-                            Purchase and start reading in seconds. Our digital library syncs instantly across all your devices.
-                        </p>
-                    </div>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
 
-                    <div className="space-y-4">
-                        <div className="w-12 h-12 bg-purple-500/10 rounded-xl flex items-center justify-center text-purple-500">
-                            <LuBookOpen size={24} />
-                        </div>
-                        <h3 className="text-xl font-bold">Personalized Library</h3>
-                        <p className="text-slate-400 leading-relaxed">
-                            Keep track of your favorites, finished reads, and upcoming wishlist in one intuitive interface.
-                        </p>
-                    </div>
+        {/* Inventory Management */}
+        <div className="space-y-4">
+            <div className="w-12 h-12 bg-indigo-500/10 rounded-xl flex items-center justify-center text-indigo-500">
+                <LuLibrary size={24} />
+            </div>
+            <h3 className="text-xl font-bold">Inventory Management</h3>
+            <p className="text-slate-400 leading-relaxed">
+                Manage book inventory with real-time stock updates, category organization, and low-stock alerts.
+            </p>
+        </div>
 
-                    <div className="space-y-4">
-                        <div className="w-12 h-12 bg-emerald-500/10 rounded-xl flex items-center justify-center text-emerald-500">
-                            <LuShieldCheck size={24} />
-                        </div>
-                        <h3 className="text-xl font-bold">Secure Transactions</h3>
-                        <p className="text-slate-400 leading-relaxed">
-                            Your wallet and data are protected with enterprise-grade encryption for every single purchase.
-                        </p>
-                    </div>
-                </div>
-            </section>
+        {/* Sales & Billing */}
+        <div className="space-y-4">
+            <div className="w-12 h-12 bg-purple-500/10 rounded-xl flex items-center justify-center text-purple-500">
+                <LuShoppingCart size={24} />
+            </div>
+            <h3 className="text-xl font-bold">Sales & Billing</h3>
+            <p className="text-slate-400 leading-relaxed">
+                Generate invoices, automate billing, and maintain accurate sales records for business tracking.
+            </p>
+        </div>
 
-            {/* Footer-like Divider */}
-            <div className="bg-gradient-to-r from-transparent via-slate-800 to-transparent h-px w-full max-w-5xl mx-auto"></div>
+        {/* User & Role Management */}
+        <div className="space-y-4">
+            <div className="w-12 h-12 bg-emerald-500/10 rounded-xl flex items-center justify-center text-emerald-500">
+                <LuUsers size={24} />
+            </div>
+            <h3 className="text-xl font-bold">User & Role Management</h3>
+            <p className="text-slate-400 leading-relaxed">
+                Role-based access control for admins and staff to ensure secure and organized store operations.
+            </p>
+        </div>
+
+    </div>
+</section>
+
+           
             
-            <footer className="py-10 text-center text-slate-500 text-sm">
-                © 2025 BookStore Inc. Built for book lovers everywhere.
-            </footer>
+            
         </div>
     )
 }
